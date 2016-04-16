@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "labName": {
+      "type": "string"
+    },
+    "userName": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string",
+      "defaultValue": "Standard_A4"
+    },
+    "labVnetName": {
+      "type": "string"
+    },
+    "labSubnetName": {
+      "type": "string"
+    },
+    "password": {
+      "type": "securestring"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-05-21-preview",
+      "type": "Microsoft.DevTestLab/labs/virtualMachines",
+      "name": "[concat(parameters('labName'), '/', parameters('name'))]",
+      "location": "eastus2",
+      "properties": {
+        "labVirtualNetworkId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/virtualnetworks/', parameters('labVnetName'))]",
+        "notes": "Ubuntu Server 14.04 LTS",
+        "galleryImageReference": {
+          "offer": "UbuntuServer",
+          "publisher": "Canonical",
+          "sku": "14.04.4-LTS",
+          "osType": "Linux",
+          "version": "latest"
+        },
+        "size": "[parameters('size')]",
+        "userName": "[parameters('userName')]",
+        "password": "[parameters('password')]",
+        "isAuthenticationWithSshKey": false,
+        "artifacts": [
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/linux-install-nodejs')]"
+          }
+        ],
+        "labSubnetName": "[parameters('labSubnetName')]",
+        "disallowPublicIpAddress": false,
+        "osType": ""
+      }
+    }
+  ]
+}
