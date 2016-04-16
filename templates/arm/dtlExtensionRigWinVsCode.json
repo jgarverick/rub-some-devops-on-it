@@ -15,6 +15,12 @@
       "type": "string",
       "defaultValue": "Standard_A4"
     },
+    "labVnetName": {
+      "type": "string"
+    },
+    "labSubnetName": {
+      "type": "string"
+    },
     "password": {
       "type": "securestring"
     },
@@ -30,7 +36,7 @@
       "name": "[concat(parameters('labName'), '/', parameters('name'))]",
       "location": "eastus2",
       "properties": {
-        "labVirtualNetworkId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/virtualnetworks/dtlextensionlab')]",
+        "labVirtualNetworkId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/virtualnetworks/', parameters('labVnetName'))]",
         "notes": "Visual Studio Enterprise 2015 Update 2 with Universal Windows Tools and Azure SDK 2.9 on Windows 10 Enterprise N (x64)",
         "galleryImageReference": {
           "offer": "VisualStudio",
@@ -66,7 +72,7 @@
             "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-azurepowershell')]"
           }
         ],
-        "labSubnetName": "DtlExtensionLabSubnet",
+        "labSubnetName": "[parameters('labSubnetName')]",
         "disallowPublicIpAddress": false,
         "osType": ""
       }
