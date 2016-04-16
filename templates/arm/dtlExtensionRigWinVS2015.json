@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "labName": {
+      "type": "string"
+    },
+    "userName": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string"
+    },
+    "password": {
+      "type": "securestring"
+    },
+    "Install_Chocolatey_Packages.packages": {
+      "type": "string",
+      "defaultValue": "nodejs"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-05-21-preview",
+      "type": "Microsoft.DevTestLab/labs/virtualMachines",
+      "name": "[concat(parameters('labName'), '/', parameters('name'))]",
+      "location": "eastus2",
+      "properties": {
+        "labVirtualNetworkId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/virtualnetworks/dtlextensionlab')]",
+        "notes": "Visual Studio Enterprise 2015 Update 2 with Universal Windows Tools and Azure SDK 2.9 on Windows 10 Enterprise N (x64)",
+        "galleryImageReference": {
+          "offer": "VisualStudio",
+          "publisher": "MicrosoftVisualStudio",
+          "sku": "VS-2015-Ent-VSU2-AzureSDK-29-W10T-N-x64",
+          "osType": "Windows",
+          "version": "latest"
+        },
+        "size": "[parameters('size')]",
+        "userName": "[parameters('userName')]",
+        "password": "[parameters('password')]",
+        "isAuthenticationWithSshKey": false,
+        "artifacts": [
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-7zip')]"
+          },
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-azurepowershell')]"
+          },
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-chrome')]"
+          },
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-git')]"
+          },
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-chocolatey')]",
+            "parameters": [
+              {
+                "name": "packages",
+                "value": "[parameters('Install_Chocolatey_Packages.packages')]"
+              }
+            ]
+          },
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-notepadplusplus')]"
+          },
+          {
+            "artifactId": "[concat(resourceGroup().id, '/providers/Microsoft.DevTestLab/labs/', parameters('labName'), '/artifactSources/Public Repo/artifacts/windows-putty')]"
+          }
+        ],
+        "labSubnetName": "DtlExtensionLabSubnet",
+        "disallowPublicIpAddress": false,
+        "osType": ""
+      }
+    }
+  ]
+}
