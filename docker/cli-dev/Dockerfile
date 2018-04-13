@@ -12,7 +12,7 @@ RUN curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/r
 RUN mkdir -p /opt/microsoft/powershell/6.0.0
 # Expand powershell to the target folder
 RUN tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/6.0.0
-# Set execute permissions
+# Set execution permissions
 RUN chmod a+x /opt/microsoft/powershell/6.0.0/pwsh
 # Create the symbolic link that points to pwsh
 RUN ln -s /opt/microsoft/powershell/6.0.0/pwsh /usr/bin/pwsh
